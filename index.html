@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World of Many Times | Live Time Zone Windows</title>
+  <meta name="description" content="Two live windows into the world, rotating through embedded streams from London, New York, Washington D.C., Amsterdam, Poland, Ukraine, Moscow, Iran, South Africa, Dubai, Nepal, Thailand, Singapore, Hong Kong and Sydney, with live local times and future chat box slots." />
+  <style>
+    :root{
+      --navy:#111b33;
+      --navy2:#223a67;
+      --cream:#f4f1ea;
+      --cream2:#fffaf0;
+      --yellow:#f4c84d;
+      --muted:#596174;
+      --ink:#0f172a;
+      --white:#ffffff;
+      --soft:#eceff5;
+      --line:rgba(17,27,51,.12);
+      --glass:rgba(255,255,255,.16);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(244,200,77,.45), transparent 28%),
+        radial-gradient(circle at 85% 100%, rgba(255,255,255,.35), transparent 25%),
+        linear-gradient(135deg,#b79a4a 0%,#233a66 38%,#101a32 100%);
+      color:var(--ink);
+      min-height:100vh;
+    }
+
+    a{color:inherit}
+
+    .page{
+      max-width:1240px;
+      margin:0 auto;
+      padding:22px;
+    }
+
+    .topnav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:22px;
+    }
+
+    .brand{
+      color:var(--white);
+      text-decoration:none;
+      font-weight:950;
+      letter-spacing:-.04em;
+      font-size:clamp(25px,4vw,42px);
+    }
+
+    .navlinks{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .navlinks a{
+      color:var(--white);
+      text-decoration:none;
+      font-weight:850;
+      font-size:14px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.17);
+      border:1px solid rgba(255,255,255,.2);
+      backdrop-filter:blur(8px);
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(310px,.95fr);
+      gap:26px;
+      align-items:stretch;
+    }
+
+    .hero-card,
+    .now-panel,
+    .stream-card,
+    .zone-card,
+    .statement{
+      background:linear-gradient(145deg,var(--cream2),#eceff5);
+      border:1px solid rgba(255,255,255,.65);
+      box-shadow:0 18px 50px rgba(4,10,25,.18);
+    }
+
+    .hero-card,
+    .now-panel{
+      border-radius:30px;
+      padding:clamp(28px,5vw,58px);
+      min-height:300px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 15px;
+      border-radius:999px;
+      background:#fff3ba;
+      color:#24324a;
+      font-weight:950;
+      font-size:14px;
+      margin-bottom:24px;
+    }
+
+    h1{
+      margin:0 0 24px;
+      max-width:760px;
+      font-size:clamp(50px,8.2vw,100px);
+      line-height:.9;
+      letter-spacing:-.075em;
+      font-weight:950;
+      color:#111827;
+    }
+
+    .intro{
+      max-width:680px;
+      color:#536174;
+      font-size:clamp(17px,2vw,21px);
+      line-height:1.65;
+      margin:0;
+      font-weight:650;
+    }
+
+    .daily-thought{
+      margin:22px 0 0;
+      padding:16px 18px;
+      border-radius:22px;
+      background:rgba(244,200,77,.22);
+      border:1px solid rgba(244,200,77,.3);
+      color:#28324a;
+      font-size:17px;
+      line-height:1.45;
+      font-weight:850;
+    }
+
+    .panel-label{
+      color:#6b7280;
+      font-size:14px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      font-weight:950;
+      margin-bottom:22px;
+    }
+
+    .main-clock{
+      font-size:clamp(48px,6.2vw,78px);
+      line-height:1;
+      letter-spacing:-.065em;
+      font-weight:950;
+      margin:0 0 20px;
+      color:#111827;
+      white-space:nowrap;
+      overflow:hidden;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .main-caption{
+      font-size:18px;
+      line-height:1.55;
+      color:#536174;
+      margin:0;
+      font-weight:700;
+    }
+
+    .live-section{
+      margin-top:28px;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+      color:#fff;
+    }
+
+    .section-head h2{
+      margin:0;
+      font-size:clamp(30px,5vw,54px);
+      letter-spacing:-.06em;
+      line-height:1;
+      color:#fff;
+    }
+
+    .section-head p{
+      margin:8px 0 0;
+      max-width:710px;
+      color:rgba(255,255,255,.82);
+      font-weight:750;
+      line-height:1.5;
+    }
+
+    .global-controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      padding:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.13);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+    }
+
+    .global-controls label{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-weight:950;
+      color:rgba(255,255,255,.82);
+    }
+
+    .global-controls select{
+      border:none;
+      border-radius:999px;
+      padding:11px 12px;
+      background:#fff;
+      color:#182033;
+      font-weight:900;
+      outline:none;
+    }
+
+    .streams-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:24px;
+    }
+
+    .stream-card{
+      border-radius:30px;
+      padding:22px;
+      overflow:hidden;
+    }
+
+    .stream-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .stream-title-block{
+      min-width:0;
+    }
+
+    .stream-kicker{
+      color:#6b7280;
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      font-weight:950;
+      margin-bottom:8px;
+    }
+
+    .stream-title{
+      font-size:clamp(28px,4vw,42px);
+      line-height:1;
+      letter-spacing:-.055em;
+      font-weight:950;
+      color:#111827;
+      margin:0;
+    }
+
+    .stream-time{
+      margin-top:10px;
+      font-size:clamp(36px,5vw,58px);
+      line-height:1;
+      letter-spacing:-.065em;
+      font-weight:950;
+      color:#111827;
+      white-space:nowrap;
+      overflow:hidden;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .stream-meta{
+      margin-top:9px;
+      color:#64748b;
+      font-weight:850;
+      line-height:1.45;
+    }
+
+    .stream-controls{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .stream-controls button,
+    .stream-controls select,
+    .action-row button,
+    .action-row a{
+      border:none;
+      border-radius:999px;
+      padding:11px 13px;
+      min-height:42px;
+      font-weight:950;
+      font-size:13px;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    .stream-controls select{
+      background:#fff;
+      color:#202b43;
+      border:1px solid rgba(17,27,51,.13);
+      outline:none;
+      max-width:180px;
+    }
+
+    .yellow-btn,
+    .stream-controls button.primary{
+      background:var(--yellow);
+      color:#182033;
+    }
+
+    .plain-btn,
+    .stream-controls button:not(.primary),
+    .action-row button{
+      background:#fff;
+      color:#202b43;
+      border:1px solid rgba(17,27,51,.13);
+    }
+
+    .video-wrap{
+      position:relative;
+      width:100%;
+      aspect-ratio:16 / 9;
+      border-radius:24px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 20% 12%, rgba(244,200,77,.35), transparent 30%),
+        linear-gradient(135deg,#101a32,#223a67);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
+    }
+
+    .video-wrap iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+      background:#000;
+    }
+
+    .stream-placeholder{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      gap:14px;
+      padding:24px;
+      color:#fff;
+    }
+
+    .placeholder-icon{
+      font-size:46px;
+      line-height:1;
+    }
+
+    .stream-placeholder strong{
+      font-size:clamp(20px,3vw,30px);
+      letter-spacing:-.04em;
+    }
+
+    .stream-placeholder p{
+      margin:0;
+      color:rgba(255,255,255,.78);
+      font-weight:750;
+      line-height:1.45;
+      max-width:520px;
+    }
+
+    .action-row{
+      margin-top:16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .action-row a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--yellow);
+      color:#182033;
+    }
+
+    .progress-shell{
+      flex:1;
+      min-width:180px;
+      height:10px;
+      border-radius:999px;
+      background:rgba(17,27,51,.08);
+      overflow:hidden;
+    }
+
+    .progress-bar{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--yellow),#fff3ba);
+      transition:width .2s linear;
+    }
+
+    .stream-line{
+      margin:16px 0 0;
+      color:#536174;
+      font-size:16px;
+      line-height:1.5;
+      font-weight:800;
+    }
+
+    .future-chat-slot{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:18px;
+      background:rgba(17,27,51,.06);
+      border:1px dashed rgba(17,27,51,.18);
+      color:#64748b;
+      font-size:13px;
+      line-height:1.45;
+      font-weight:850;
+    }
+
+    .future-chat-slot strong{
+      color:#1f2a44;
+    }
+
+    .zones-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+      gap:16px;
+      margin-top:24px;
+    }
+
+    .zone-card{
+      border-radius:24px;
+      padding:20px;
+      position:relative;
+      overflow:hidden;
+      cursor:pointer;
+    }
+
+    .zone-card::after{
+      content:"";
+      position:absolute;
+      width:110px;
+      height:110px;
+      border-radius:50%;
+      right:-46px;
+      bottom:-48px;
+      background:rgba(34,58,103,.06);
+    }
+
+    .zone-card.active{
+      outline:4px solid rgba(244,200,77,.55);
+    }
+
+    .zone-city{
+      font-size:24px;
+      margin:0 0 10px;
+      line-height:1;
+      letter-spacing:-.045em;
+      font-weight:950;
+      color:#182033;
+      position:relative;
+      z-index:1;
+    }
+
+    .zone-time{
+      font-size:34px;
+      line-height:1;
+      letter-spacing:-.06em;
+      font-weight:950;
+      color:#111827;
+      white-space:nowrap;
+      overflow:hidden;
+      font-variant-numeric:tabular-nums;
+      position:relative;
+      z-index:1;
+    }
+
+    .zone-meta{
+      margin-top:10px;
+      color:#64748b;
+      font-weight:850;
+      font-size:13px;
+      line-height:1.4;
+      position:relative;
+      z-index:1;
+    }
+
+    .statement{
+      border-radius:24px;
+      margin-top:26px;
+      padding:24px 28px;
+      font-size:21px;
+      line-height:1.45;
+      font-weight:950;
+      color:#172033;
+    }
+
+    .edit-note{
+      margin-top:26px;
+      padding:20px 22px;
+      border-radius:24px;
+      background:rgba(255,255,255,.13);
+      border:1px solid rgba(255,255,255,.18);
+      color:rgba(255,255,255,.9);
+      line-height:1.55;
+      font-weight:750;
+    }
+
+    .edit-note strong{color:#fff}
+    .edit-note code{
+      background:rgba(0,0,0,.18);
+      padding:3px 6px;
+      border-radius:7px;
+      color:#fff3ba;
+      font-weight:900;
+    }
+
+    footer{
+      margin-top:34px;
+      padding:24px 0 8px;
+      color:rgba(255,255,255,.82);
+      text-align:center;
+      font-weight:650;
+      line-height:1.6;
+    }
+
+    footer a{
+      color:#fff;
+      font-weight:900;
+      text-decoration:underline;
+      text-underline-offset:3px;
+    }
+
+    @media(max-width:920px){
+      .hero-grid,
+      .streams-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hero-card,
+      .now-panel{
+        padding:30px;
+        border-radius:26px;
+      }
+    }
+
+    @media(max-width:600px){
+      .page{padding:14px}
+
+      .topnav{align-items:flex-start}
+
+      .navlinks{
+        width:100%;
+        overflow-x:auto;
+        flex-wrap:nowrap;
+        padding-bottom:4px;
+      }
+
+      .navlinks a{white-space:nowrap}
+
+      .stream-card{padding:16px;border-radius:24px}
+
+      .stream-top{
+        display:block;
+      }
+
+      .stream-controls{
+        justify-content:flex-start;
+        margin-top:16px;
+      }
+
+      .stream-controls select,
+      .stream-controls button{
+        flex:1;
+      }
+
+      .global-controls{
+        width:100%;
+        border-radius:24px;
+        justify-content:space-between;
+      }
+
+      .global-controls select{flex:1}
+
+      .main-clock,
+      .stream-time{
+        font-size:clamp(42px,15vw,58px);
+      }
+
+      h1{
+        font-size:clamp(48px,15vw,72px);
+      }
+
+      .zone-card{
+        padding:18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="topnav">
+      <a class="brand" href="index.html">🌍 World of Many Times</a>
+      <div class="navlinks" aria-label="Main navigation">
+        <a href="index.html">Live windows</a>
+        <a href="https://patricklester88.github.io/whattimeisit/">WhatTimeIsIt</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </nav>
+
+    <section class="hero-grid">
+      <div class="hero-card">
+        <div class="eyebrow">📹 Live time zone sister site</div>
+        <h1>Two windows into the same planet.</h1>
+        <p class="intro">A live-stream version of the world clock idea. One window can stay near your own time zone, while the other wanders around the world every few minutes. The planet is doing several things at once, which frankly seems excessive.</p>
+        <p class="daily-thought" id="dailyThought">Loading today’s small philosophical complaint.</p>
+      </div>
+
+      <aside class="now-panel">
+        <div class="panel-label">Your detected time now</div>
+        <div class="main-clock" id="localClock">--:--:--</div>
+        <p class="main-caption" id="localCaption">Detecting your device time zone and choosing a nearby live window.</p>
+      </aside>
+    </section>
+
+    <section class="live-section" aria-label="Two live stream windows">
+      <div class="section-head">
+        <div>
+          <h2>Live windows</h2>
+          <p>Representative time zones include London/UK, Poland and other cities across the world. Each of the two windows can be static or rotating.</p>
+        </div>
+        <div class="global-controls">
+          <label for="rotationInterval">Rotate every</label>
+          <select id="rotationInterval" aria-label="Rotation interval">
+            <option value="30000">30 sec demo</option>
+            <option value="60000">1 min</option>
+            <option value="180000" selected>3 min</option>
+            <option value="300000">5 min</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="streams-grid">
+        <article class="stream-card" aria-label="Stream window one">
+          <div class="stream-top">
+            <div class="stream-title-block">
+              <div class="stream-kicker">Window one</div>
+              <h3 class="stream-title" id="windowATitle">Loading</h3>
+              <div class="stream-time" id="windowATime">--:--:--</div>
+              <div class="stream-meta" id="windowAMeta">Choosing a time zone.</div>
+            </div>
+            <div class="stream-controls">
+              <select id="windowASelect" aria-label="Choose window one city"></select>
+              <select id="windowAMode" aria-label="Choose window one mode">
+                <option value="static" selected>Static</option>
+                <option value="rotate">Rotate</option>
+              </select>
+              <button class="primary" id="windowANext" type="button">Next</button>
+            </div>
+          </div>
+
+          <div class="video-wrap" id="windowAVideo"></div>
+
+          <div class="action-row">
+            <a id="windowASearch" href="#" target="_blank" rel="noopener">Find live cam</a>
+            <div class="progress-shell" aria-hidden="true"><div class="progress-bar" id="windowAProgress"></div></div>
+          </div>
+
+          <p class="stream-line" id="windowALine">The world is buffering with quiet judgement.</p>
+
+          <div class="future-chat-slot"><strong>Future chat slot:</strong> one day this could become a tiny WhoAmI / Discover Me style chat box for this place.</div>
+        </article>
+
+        <article class="stream-card" aria-label="Stream window two">
+          <div class="stream-top">
+            <div class="stream-title-block">
+              <div class="stream-kicker">Window two</div>
+              <h3 class="stream-title" id="windowBTitle">Loading</h3>
+              <div class="stream-time" id="windowBTime">--:--:--</div>
+              <div class="stream-meta" id="windowBMeta">Choosing a time zone.</div>
+            </div>
+            <div class="stream-controls">
+              <select id="windowBSelect" aria-label="Choose window two city"></select>
+              <select id="windowBMode" aria-label="Choose window two mode">
+                <option value="static">Static</option>
+                <option value="rotate" selected>Rotate</option>
+              </select>
+              <button class="primary" id="windowBNext" type="button">Next</button>
+            </div>
+          </div>
+
+          <div class="video-wrap" id="windowBVideo"></div>
+
+          <div class="action-row">
+            <a id="windowBSearch" href="#" target="_blank" rel="noopener">Find live cam</a>
+            <div class="progress-shell" aria-hidden="true"><div class="progress-bar" id="windowBProgress"></div></div>
+          </div>
+
+          <p class="stream-line" id="windowBLine">The second window is checking whether tomorrow has started without you.</p>
+
+          <div class="future-chat-slot"><strong>Future chat slot:</strong> one day this could become a tiny WhoAmI / Discover Me style chat box for this place.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="zones-grid" id="zonesGrid" aria-label="Live time zone choices"></section>
+
+    <section class="statement" id="statement">
+      One window can stay home. The other can wander off and make the rest of the planet look suspiciously busy.
+    </section>
+
+    <section class="edit-note">
+      <strong>To activate real embedded streams:</strong> edit the <code>STREAMS</code> list near the bottom of this file and paste a YouTube live video ID into each <code>youtubeId</code> field. London, New York, Washington D.C., Amsterdam, Poland, Ukraine, Moscow, Iran, South Africa, Dubai, Nepal, Thailand, Singapore, Hong Kong and Sydney are already embedded as first test streams. Each embedded stream shows the place or landmark once in the main details line. The small box under each window is reserved for a possible future WhoAmI / Discover Me style chat feature. Any stream that does not yet have a YouTube ID shows a smart placeholder plus a “Find live cam” search button.
+    </section>
+
+    <footer>
+      © World of Many Times |
+      Sister site of <a href="https://patricklester88.github.io/whattimeisit/">WhatTimeIsIt</a> |
+      <a href="privacy.html">Privacy</a>
+    </footer>
+  </main>
+
+  <script>
+    /*
+      LIVE STREAM SETUP
+      -----------------
+      Paste YouTube live video IDs into youtubeId below.
+
+      Example:
+      youtubeId: "abc123XYZ"
+
+      The video ID is the part after v= in a YouTube URL:
+      https://www.youtube.com/watch?v=abc123XYZ
+
+      If a stream does not allow embedding, leave youtubeId blank and the site will show
+      a placeholder with a search button instead of a broken player.
+    */
+
+    const STREAMS = [
+      {
+        city:"Honolulu",
+        country:"Hawaii, United States",
+        zone:"Pacific/Honolulu",
+        offsetHint:"UTC−10",
+        youtubeId:"",
+        sourcePlace:"Hawaii live-cam slot",
+        search:"Honolulu Hawaii live webcam YouTube",
+        line:"In Honolulu, the day is taking its time, which is frankly a healthier attitude."
+      },
+      {
+        city:"Phoenix",
+        country:"Arizona, United States",
+        zone:"America/Phoenix",
+        offsetHint:"UTC−7",
+        youtubeId:"",
+        sourcePlace:"Phoenix live-cam slot",
+        search:"Phoenix Arizona live webcam YouTube",
+        line:"In Phoenix, the clock is probably wearing sunglasses."
+      },
+      {
+        city:"New York",
+        country:"United States",
+        zone:"America/New_York",
+        offsetHint:"UTC−5/−4",
+        youtubeId:"z-jYdOIKcTQ",
+        sourceUrl:"https://www.youtube.com/watch?v=z-jYdOIKcTQ",
+        sourcePlace:"Times Square Crossroads, Manhattan",
+        search:"New York Times Square live webcam YouTube",
+        line:"In New York, the day is still negotiating with traffic, ambition and coffee."
+      },
+      {
+        city:"Washington D.C.",
+        country:"United States",
+        zone:"America/New_York",
+        offsetHint:"UTC−5/−4",
+        youtubeId:"hTHld3T7NA0",
+        sourceUrl:"https://www.youtube.com/watch?v=hTHld3T7NA0",
+        sourcePlace:"White House live cam, Washington D.C.",
+        search:"White House Washington DC live webcam YouTube earthTV",
+        line:"In Washington D.C., the White House is on camera and the minute hand is trying not to look political."
+      },
+      {
+        city:"London",
+        country:"United Kingdom",
+        zone:"Europe/London",
+        offsetHint:"UK",
+        youtubeId:"M3EYAY2MftI",
+        sourceUrl:"https://www.youtube.com/watch?v=M3EYAY2MftI",
+        sourcePlace:"Abbey Road crossing, London",
+        search:"London UK live webcam YouTube Abbey Road",
+        line:"In London, someone is crossing a road with more cultural pressure than seems fair."
+      },
+      {
+        city:"Amsterdam",
+        country:"Netherlands",
+        zone:"Europe/Amsterdam",
+        offsetHint:"UTC+1/+2",
+        youtubeId:"Gd9d4q6WvUY",
+        sourceUrl:"https://www.youtube.com/watch?v=Gd9d4q6WvUY",
+        sourcePlace:"Dam Square / De Dam, Amsterdam",
+        search:"Amsterdam Dam Square live webcam YouTube",
+        line:"In Amsterdam, the bicycles have formed a committee and the canals are pretending they are not judging anyone."
+      },
+      {
+        city:"Warsaw",
+        country:"Poland",
+        zone:"Europe/Warsaw",
+        offsetHint:"UTC+1/+2",
+        youtubeId:"AJGLajSFggk",
+        sourceUrl:"https://www.youtube.com/watch?v=AJGLajSFggk",
+        sourcePlace:"Warsaw skyline / city centre panorama",
+        search:"Warsaw Poland live webcam YouTube",
+        line:"In Warsaw, the skyline is quietly getting on with Europe while everyone else is pretending to understand time zones."
+      },
+      {
+        city:"Kyiv",
+        country:"Ukraine",
+        zone:"Europe/Kyiv",
+        offsetHint:"UTC+2/+3",
+        youtubeId:"2cyQPN5xQtU",
+        sourceUrl:"https://www.youtube.com/watch?v=2cyQPN5xQtU",
+        sourcePlace:"Rusanivka canal and Kyiv city view",
+        search:"Kyiv Ukraine live webcam YouTube Rusanivka",
+        line:"In Kyiv, the clock keeps moving with quiet determination while the city refuses to be reduced to a headline."
+      },
+      {
+        city:"Moscow",
+        country:"Russia",
+        zone:"Europe/Moscow",
+        offsetHint:"UTC+3",
+        youtubeId:"js1y_TSHLDg",
+        sourceUrl:"https://www.youtube.com/watch?v=js1y_TSHLDg",
+        sourcePlace:"Red Square and Kremlin view, Moscow",
+        search:"Moscow Red Square Kremlin live webcam YouTube",
+        line:"In Moscow, Red Square is keeping its own counsel while the clock behaves with icy formality."
+      },
+      {
+        city:"Tehran",
+        country:"Iran",
+        zone:"Asia/Tehran",
+        offsetHint:"UTC+3:30",
+        youtubeId:"-zGuR1qVKrU",
+        sourceUrl:"https://www.youtube.com/watch?v=-zGuR1qVKrU",
+        sourcePlace:"Iran HD camera feeds, including Tehran and Isfahan",
+        search:"Tehran Iran live webcam YouTube real-time",
+        line:"In Tehran, the clock keeps its own half-hour rhythm while the city watches the day unfold in real time."
+      },
+      {
+        city:"Cape Town",
+        country:"South Africa",
+        zone:"Africa/Johannesburg",
+        offsetHint:"UTC+2",
+        youtubeId:"38vl9_XJpHw",
+        sourceUrl:"https://www.youtube.com/watch?v=38vl9_XJpHw",
+        sourcePlace:"Table Mountain, Cape Town",
+        search:"Cape Town Table Mountain live webcam YouTube",
+        line:"In Cape Town, the day has scenery and is not being modest about it."
+      },
+      {
+        city:"Dubai",
+        country:"United Arab Emirates",
+        zone:"Asia/Dubai",
+        offsetHint:"UTC+4",
+        youtubeId:"ka9MsehA8I4",
+        sourceUrl:"https://www.youtube.com/watch?v=ka9MsehA8I4",
+        sourcePlace:"Dubai Marina / city view",
+        search:"Dubai Marina live webcam YouTube",
+        line:"In Dubai, the skyline has decided subtlety is not a useful time-management strategy."
+      },
+      {
+        city:"Kathmandu",
+        country:"Nepal",
+        zone:"Asia/Kathmandu",
+        offsetHint:"UTC+5:45",
+        youtubeId:"71sc5FRtuKM",
+        sourceUrl:"https://www.youtube.com/watch?v=71sc5FRtuKM",
+        sourcePlace:"Kathmandu skyline, Nepal",
+        search:"Kathmandu skyline live webcam Nepal YouTube",
+        line:"In Kathmandu, the clock has added forty-five extra minutes, just to keep the rest of the world humble."
+      },
+      {
+        city:"Bangkok",
+        country:"Thailand",
+        zone:"Asia/Bangkok",
+        offsetHint:"UTC+7",
+        youtubeId:"Q71sLS8h9a4",
+        sourceUrl:"https://www.youtube.com/watch?v=Q71sLS8h9a4",
+        sourcePlace:"Sukhumvit Road, Soi 19, Bangkok",
+        search:"Sukhumvit Road Bangkok live street webcam YouTube",
+        line:"In Bangkok, the traffic has accepted time as a suggestion rather than a rule."
+      },
+      {
+        city:"Singapore",
+        country:"Singapore",
+        zone:"Asia/Singapore",
+        offsetHint:"UTC+8",
+        youtubeId:"9cfkyMzanbc",
+        sourceUrl:"https://www.youtube.com/watch?v=9cfkyMzanbc",
+        sourcePlace:"Downtown Singapore",
+        search:"Downtown Singapore live webcam YouTube",
+        line:"In Singapore, tomorrow-adjacent efficiency is already happening."
+      },
+      {
+        city:"Hong Kong",
+        country:"Hong Kong",
+        zone:"Asia/Hong_Kong",
+        offsetHint:"UTC+8",
+        youtubeId:"bMS-xCTPp6Y",
+        sourceUrl:"https://www.youtube.com/watch?v=bMS-xCTPp6Y",
+        sourcePlace:"Hong Kong skyline / Victoria Harbour panorama",
+        search:"Hong Kong skyline Victoria Harbour live webcam YouTube",
+        line:"In Hong Kong, the harbour is doing its neon paperwork while the skyline stays unnecessarily impressive."
+      },
+      {
+        city:"Sydney",
+        country:"Australia",
+        zone:"Australia/Sydney",
+        offsetHint:"UTC+10/+11",
+        youtubeId:"5uZa3-RMFos",
+        sourceUrl:"https://www.youtube.com/watch?v=5uZa3-RMFos",
+        sourcePlace:"Sydney Harbour",
+        search:"Sydney Harbour live webcam YouTube",
+        line:"In Sydney, the harbour is awake, sparkling, and quietly showing off."
+      }
+    ];
+
+    const thoughts = [
+      "Today is already tomorrow somewhere.",
+      "The same minute wears different clothes around the world.",
+      "Your evening is someone else’s alarm clock.",
+      "Now is not one thing. It depends where you stand.",
+      "Time does not pass. It gets translated.",
+      "The planet is round, but deadlines are flat.",
+      "Midnight is not an ending. It is a local opinion.",
+      "Somewhere, breakfast is already a memory.",
+      "The world is not behind you. It is just elsewhere.",
+      "Every hour is rush hour somewhere."
+    ];
+
+    const windows = {
+      A: {
+        index:0,
+        lastChange:Date.now(),
+        elements:{}
+      },
+      B: {
+        index:4,
+        lastChange:Date.now(),
+        elements:{}
+      }
+    };
+
+    let lastRenderedVideos = { A:null, B:null };
+
+    const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/London";
+    let use12Hour = false;
+
+    function escapeHtml(value){
+      return String(value).replace(/[&<>"']/g, ch => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      }[ch]));
+    }
+
+    function pad2(value){
+      return String(value).padStart(2, "0");
+    }
+
+    function getOffsetMinutes(date, timeZone){
+      const safeDate = new Date(Math.floor(date.getTime() / 1000) * 1000);
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone,
+        year:"numeric",
+        month:"2-digit",
+        day:"2-digit",
+        hour:"2-digit",
+        minute:"2-digit",
+        second:"2-digit",
+        hourCycle:"h23"
+      }).formatToParts(safeDate);
+
+      const get = type => Number(parts.find(part => part.type === type)?.value || 0);
+      const asUtc = Date.UTC(
+        get("year"),
+        get("month") - 1,
+        get("day"),
+        get("hour"),
+        get("minute"),
+        get("second")
+      );
+
+      return Math.round((asUtc - safeDate.getTime()) / 60000);
+    }
+
+    function offsetLabel(minutes){
+      if(minutes === 0) return "UTC";
+      const sign = minutes >= 0 ? "+" : "−";
+      const abs = Math.abs(minutes);
+      const hours = Math.floor(abs / 60);
+      const mins = abs % 60;
+      return `UTC${sign}${hours}${mins ? ":" + pad2(mins) : ""}`;
+    }
+
+    function formatTime(date, timeZone){
+      return new Intl.DateTimeFormat("en-GB", {
+        timeZone,
+        hour:"2-digit",
+        minute:"2-digit",
+        second:"2-digit",
+        hour12:use12Hour
+      }).format(date);
+    }
+
+    function formatDate(date, timeZone){
+      return new Intl.DateTimeFormat("en-GB", {
+        timeZone,
+        weekday:"long",
+        day:"numeric",
+        month:"long",
+        timeZoneName:"short",
+        hour:"2-digit",
+        minute:"2-digit",
+        hour12:use12Hour
+      }).format(date);
+    }
+
+    function hourInZone(date, timeZone){
+      return Number(new Intl.DateTimeFormat("en-GB", {
+        timeZone,
+        hour:"2-digit",
+        hourCycle:"h23"
+      }).format(date));
+    }
+
+    function statusForHour(hour){
+      if(hour >= 0 && hour < 6) return "probably asleep, unless the fridge has requested a meeting";
+      if(hour >= 6 && hour < 9) return "awake far too early and pretending this was the plan";
+      if(hour >= 9 && hour < 12) return "suspiciously productive";
+      if(hour >= 12 && hour < 14) return "eating, meeting, or inspecting lunch";
+      if(hour >= 14 && hour < 18) return "sending emails with unnecessary confidence";
+      if(hour >= 18 && hour < 22) return "trying to enjoy itself while another time zone starts work";
+      return "claiming it is going to bed soon";
+    }
+
+    function circularOffsetDifference(a, b){
+      const diff = Math.abs(a - b);
+      return Math.min(diff, 1440 - diff);
+    }
+
+    function nearestStreamIndexToLocalTime(){
+      const now = new Date();
+      let localOffset = 0;
+      try{
+        localOffset = getOffsetMinutes(now, localZone);
+      }catch(error){
+        localOffset = 0;
+      }
+
+      let bestIndex = 0;
+      let bestDiff = Infinity;
+
+      STREAMS.forEach((stream, index) => {
+        try{
+          const offset = getOffsetMinutes(now, stream.zone);
+          const diff = circularOffsetDifference(offset, localOffset);
+          if(diff < bestDiff){
+            bestDiff = diff;
+            bestIndex = index;
+          }
+        }catch(error){}
+      });
+
+      return bestIndex;
+    }
+
+    function youtubeEmbedUrl(videoId){
+      const clean = String(videoId || "").trim();
+      if(!clean) return "";
+      return `https://www.youtube.com/embed/${encodeURIComponent(clean)}?autoplay=1&mute=1&playsinline=1&rel=0`;
+    }
+
+    function searchUrl(stream){
+      if(stream.youtubeId && stream.sourceUrl) return stream.sourceUrl;
+      return "https://www.youtube.com/results?search_query=" + encodeURIComponent(stream.search || `${stream.city} live webcam`);
+    }
+
+    function renderVideo(windowKey){
+      const win = windows[windowKey];
+      const stream = STREAMS[win.index];
+      const container = win.elements.video;
+      const videoKey = `${win.index}:${stream.youtubeId || "placeholder"}`;
+
+      if(lastRenderedVideos[windowKey] === videoKey) return;
+      lastRenderedVideos[windowKey] = videoKey;
+
+      const embed = youtubeEmbedUrl(stream.youtubeId);
+
+      if(embed){
+        container.innerHTML = `
+          <iframe
+            title="${escapeHtml(stream.city)} live stream — ${escapeHtml(stream.sourcePlace || stream.city)}"
+            src="${embed}"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+        `;
+      }else{
+        container.innerHTML = `
+          <div class="stream-placeholder">
+            <div class="placeholder-icon">📹</div>
+            <strong>${escapeHtml(stream.city)} live stream slot</strong>
+            <p>Paste a YouTube live video ID into this city’s <strong>youtubeId</strong> field to make this an embedded live stream.</p>
+          </div>
+        `;
+      }
+    }
+
+    function populateSelects(){
+      ["A", "B"].forEach(key => {
+        const select = windows[key].elements.select;
+        select.innerHTML = STREAMS.map((stream, index) => `
+          <option value="${index}">${escapeHtml(stream.city)} · ${escapeHtml(stream.offsetHint)}</option>
+        `).join("");
+        select.value = String(windows[key].index);
+      });
+    }
+
+    function setupElements(){
+      windows.A.elements = {
+        title:document.getElementById("windowATitle"),
+        time:document.getElementById("windowATime"),
+        meta:document.getElementById("windowAMeta"),
+        line:document.getElementById("windowALine"),
+        video:document.getElementById("windowAVideo"),
+        search:document.getElementById("windowASearch"),
+        progress:document.getElementById("windowAProgress"),
+        select:document.getElementById("windowASelect"),
+        mode:document.getElementById("windowAMode"),
+        next:document.getElementById("windowANext")
+      };
+
+      windows.B.elements = {
+        title:document.getElementById("windowBTitle"),
+        time:document.getElementById("windowBTime"),
+        meta:document.getElementById("windowBMeta"),
+        line:document.getElementById("windowBLine"),
+        video:document.getElementById("windowBVideo"),
+        search:document.getElementById("windowBSearch"),
+        progress:document.getElementById("windowBProgress"),
+        select:document.getElementById("windowBSelect"),
+        mode:document.getElementById("windowBMode"),
+        next:document.getElementById("windowBNext")
+      };
+    }
+
+    function nextStream(windowKey){
+      const win = windows[windowKey];
+      win.index = (win.index + 1) % STREAMS.length;
+      win.lastChange = Date.now();
+      win.elements.select.value = String(win.index);
+      renderWindow(windowKey);
+      updateZoneCards();
+    }
+
+    function setStream(windowKey, index){
+      const win = windows[windowKey];
+      win.index = Number(index);
+      win.lastChange = Date.now();
+      renderWindow(windowKey);
+      updateZoneCards();
+    }
+
+    function renderWindow(windowKey){
+      const win = windows[windowKey];
+      const stream = STREAMS[win.index];
+      const now = new Date();
+      const offset = offsetLabel(getOffsetMinutes(now, stream.zone));
+      const localHour = hourInZone(now, stream.zone);
+
+      win.elements.title.textContent = stream.city;
+      win.elements.time.textContent = formatTime(now, stream.zone);
+      const shownPlace = stream.sourcePlace || stream.city;
+      win.elements.meta.textContent = `${stream.country} · ${stream.zone} · ${offset} · ${formatDate(now, stream.zone)} · Showing: ${shownPlace}`;
+      win.elements.line.textContent = `${stream.line} Locally, they are ${statusForHour(localHour)}.`;
+      win.elements.search.href = searchUrl(stream);
+      win.elements.search.textContent = stream.youtubeId ? "Open stream on YouTube" : "Find live cam";
+      renderVideo(windowKey);
+    }
+
+    function updateProgress(windowKey){
+      const win = windows[windowKey];
+      const interval = Number(document.getElementById("rotationInterval").value || 180000);
+      const mode = win.elements.mode.value;
+      if(mode !== "rotate"){
+        win.elements.progress.style.width = "0%";
+        return;
+      }
+
+      const elapsed = Date.now() - win.lastChange;
+      const progress = Math.max(0, Math.min(100, (elapsed / interval) * 100));
+      win.elements.progress.style.width = `${progress}%`;
+
+      if(elapsed >= interval){
+        nextStream(windowKey);
+      }
+    }
+
+    function renderZoneCards(){
+      const grid = document.getElementById("zonesGrid");
+      grid.innerHTML = STREAMS.map((stream, index) => `
+        <article class="zone-card" data-index="${index}">
+          <h3 class="zone-city">${escapeHtml(stream.city)}</h3>
+          <div class="zone-time" data-zone-time="${index}">--:--:--</div>
+          <div class="zone-meta">${escapeHtml(stream.offsetHint)} · ${escapeHtml(stream.country)}<br>View: ${escapeHtml(stream.sourcePlace || stream.city)}</div>
+        </article>
+      `).join("");
+
+      grid.querySelectorAll(".zone-card").forEach(card => {
+        card.addEventListener("click", () => {
+          setStream("B", Number(card.dataset.index));
+          windows.B.elements.mode.value = "static";
+          document.getElementById("statement").textContent = `${STREAMS[Number(card.dataset.index)].city} is now pinned in window two. The other window can still stay close to home.`;
+        });
+      });
+    }
+
+    function updateZoneCards(){
+      document.querySelectorAll(".zone-card").forEach(card => {
+        const index = Number(card.dataset.index);
+        const stream = STREAMS[index];
+        const timeEl = card.querySelector("[data-zone-time]");
+        timeEl.textContent = formatTime(new Date(), stream.zone);
+        card.classList.toggle("active", index === windows.A.index || index === windows.B.index);
+      });
+    }
+
+    function updateLocalPanel(){
+      const now = new Date();
+      const localClock = document.getElementById("localClock");
+      const localCaption = document.getElementById("localCaption");
+
+      localClock.textContent = formatTime(now, localZone);
+
+      let localOffset = "UTC";
+      try{
+        localOffset = offsetLabel(getOffsetMinutes(now, localZone));
+      }catch(error){}
+
+      const nearest = STREAMS[windows.A.index];
+      localCaption.textContent = `Your device says ${localZone} (${localOffset}). Window one starts with the nearest of the eight demo zones: ${nearest.city}.`;
+    }
+
+    function updateAll(){
+      updateLocalPanel();
+      renderWindow("A");
+      renderWindow("B");
+      updateProgress("A");
+      updateProgress("B");
+      updateZoneCards();
+
+      const a = STREAMS[windows.A.index];
+      const b = STREAMS[windows.B.index];
+      document.getElementById("statement").textContent =
+        `Window one is looking at ${a.city}. Window two is looking at ${b.city}. Same planet, different amount of urgency.`;
+    }
+
+    function setDailyThought(){
+      const today = new Date();
+      const start = new Date(today.getFullYear(), 0, 0);
+      const day = Math.floor((today - start) / 86400000);
+      document.getElementById("dailyThought").textContent =
+        `Today’s thought: “${thoughts[day % thoughts.length]}”`;
+    }
+
+    function init(){
+      setupElements();
+
+      windows.A.index = nearestStreamIndexToLocalTime();
+      windows.B.index = (windows.A.index + 4) % STREAMS.length;
+
+      setDailyThought();
+      populateSelects();
+      renderZoneCards();
+
+      ["A", "B"].forEach(key => {
+        const win = windows[key];
+        win.elements.select.value = String(win.index);
+
+        win.elements.select.addEventListener("change", event => {
+          setStream(key, event.currentTarget.value);
+          win.elements.mode.value = "static";
+        });
+
+        win.elements.mode.addEventListener("change", () => {
+          win.lastChange = Date.now();
+          updateProgress(key);
+        });
+
+        win.elements.next.addEventListener("click", () => {
+          nextStream(key);
+        });
+      });
+
+      document.getElementById("rotationInterval").addEventListener("change", () => {
+        windows.A.lastChange = Date.now();
+        windows.B.lastChange = Date.now();
+      });
+
+      updateAll();
+      setInterval(updateAll, 1000);
+    }
+
+    init();
+  </script>
+</body>
+</html>
