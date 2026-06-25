@@ -95,13 +95,25 @@ function renderWindow(el, beach, num, selectedIndex){const diff=niceDiff(beach);
    };
  }
  if(soundButton && iframe){
+   soundButton.dataset.sound = 'off';
    soundButton.onclick = () => {
-     const current = iframe.src;
-     let next = current.replace('mute=1','mute=0');
-     if(!next.includes('autoplay=1')) next += (next.includes('?') ? '&' : '?') + 'autoplay=1';
+     const soundOn = soundButton.dataset.sound === 'on';
+     let next;
+     try {
+       const url = new URL(iframe.src);
+       url.searchParams.set('autoplay','1');
+       url.searchParams.set('mute', soundOn ? '1' : '0');
+       next = url.toString();
+     } catch(e) {
+       next = iframe.src;
+       next = soundOn ? next.replace('mute=0','mute=1') : next.replace('mute=1','mute=0');
+       if(!next.includes('mute=')) next += (next.includes('?') ? '&' : '?') + 'mute=' + (soundOn ? '1' : '0');
+       if(!next.includes('autoplay=1')) next += (next.includes('?') ? '&' : '?') + 'autoplay=1';
+     }
      iframe.src = next;
-     soundButton.textContent = '🔊 Sound on?';
-     soundButton.title = 'If sound is still blocked, use the YouTube link';
+     soundButton.dataset.sound = soundOn ? 'off' : 'on';
+     soundButton.textContent = soundOn ? '🔊 Sound' : '🔇 Mute';
+     soundButton.title = soundOn ? 'Try sound for this stream' : 'Turn sound off';
    };
  }
 }
